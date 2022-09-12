@@ -36,9 +36,11 @@ const vec4 lightPos = vec4(5, 5, 3, 1); //The position of our virtual light, whi
                                         //the geometry in the fragment shader.
 
 
-float random(vec3 pos)
+float hash(vec3 p)  // replace this by something better
 {
-    return fract(sin(dot(pos, vec3(13.0,80.0,200.0)))*50000.0);
+    p  = fract( p*0.3183099+.1 );
+	p *= 17.0;
+    return fract( p.x*p.y*p.z*(p.x+p.y+p.z) );
 }
 
 void main()
@@ -51,10 +53,12 @@ void main()
                                                             // model matrix. This is necessary to ensure the normals remain
                                                             // perpendicular to the surface after the surface is transformed by
                                                             // the model matrix.
-    float offset = random(vs_Pos.xyz);
+    float offset = hash(vs_Pos.xyz);
     
+    vec3 jitterDir = normalize(vs_Pos.xyz - vec3(0.0));
+
     vec4 jitteredPos = vs_Pos;
-    jitteredPos.xyz += 0.1 * sin(0.1*offset*u_Time) * vs_Nor.xyz;
+    jitteredPos.xyz += 0.1 * sin(0.1*offset*u_Time) * jitterDir;
 
     fs_Pos = vs_Pos;
 

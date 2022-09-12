@@ -14,6 +14,8 @@ import Cube from './geometry/Cube';
 const controls = {
   tesselations: 5,
   color: [ 0, 128, 255],
+  scale: 1.5,
+  persistence: 0.5,
   'Load Scene': loadScene, // A function pointer, essentially
 };
 
@@ -44,6 +46,9 @@ function main() {
   const gui = new DAT.GUI();
   gui.add(controls, 'tesselations', 0, 8).step(1);
   gui.addColor(controls, "color");
+  const noise_gui = gui.addFolder("noise");
+  noise_gui.add(controls, 'persistence', 0, 1);
+  noise_gui.add(controls, 'scale', 0, 5);
   gui.add(controls, 'Load Scene');
 
   // get canvas and webgl context
@@ -75,7 +80,6 @@ function main() {
     new Shader(gl.FRAGMENT_SHADER, require('./shaders/custom-frag.glsl')),
   ])
 
-
   var time = 0;
 
   // This function will be called every frame
@@ -92,9 +96,10 @@ function main() {
       icosphere.create();
     }
 
+    custom.setNoise(controls.scale, controls.persistence);
     custom.setGeometryColor(vec4.fromValues(
       controls.color[0]/255., controls.color[1]/255., controls.color[2]/255., 1.0));  
-
+  
     custom.setTime(time);
 
     renderer.render(camera, custom, [
