@@ -16,6 +16,8 @@ const controls = {
   color: [ 0, 128, 255],
   scale: 1.5,
   persistence: 0.5,
+  displacement: 0.1,
+  frequency: 0.1,
   'Load Scene': loadScene, // A function pointer, essentially
 };
 
@@ -49,6 +51,9 @@ function main() {
   const noise_gui = gui.addFolder("noise");
   noise_gui.add(controls, 'persistence', 0, 1);
   noise_gui.add(controls, 'scale', 0, 5);
+  const jitter_gui = gui.addFolder("jitter");
+  jitter_gui.add(controls, "displacement", 0, 1);
+  jitter_gui.add(controls, "frequency", 0, 2);
   gui.add(controls, 'Load Scene');
 
   // get canvas and webgl context
@@ -99,7 +104,7 @@ function main() {
     custom.setNoise(controls.scale, controls.persistence);
     custom.setGeometryColor(vec4.fromValues(
       controls.color[0]/255., controls.color[1]/255., controls.color[2]/255., 1.0));  
-  
+    custom.setJitter(controls.displacement, controls.frequency);
     custom.setTime(time);
 
     renderer.render(camera, custom, [

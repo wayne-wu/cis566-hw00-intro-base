@@ -32,6 +32,8 @@ class ShaderProgram {
   unifTime: WebGLUniformLocation;
   unifNoiseScale: WebGLUniformLocation;
   unifNoisePersistence: WebGLUniformLocation;
+  unifDisplacement: WebGLUniformLocation;
+  unifFrequency: WebGLUniformLocation;
 
   constructor(shaders: Array<Shader>) {
     this.prog = gl.createProgram();
@@ -54,6 +56,8 @@ class ShaderProgram {
     this.unifTime       = gl.getUniformLocation(this.prog, "u_Time");
     this.unifNoiseScale = gl.getUniformLocation(this.prog, "u_NoiseScale");
     this.unifNoisePersistence = gl.getUniformLocation(this.prog, "u_NoisePersistence");
+    this.unifDisplacement = gl.getUniformLocation(this.prog, "u_Displacement");
+    this.unifFrequency = gl.getUniformLocation(this.prog, "u_Frequency");
   }
 
   use() {
@@ -100,6 +104,12 @@ class ShaderProgram {
     this.use();
     gl.uniform1f(this.unifNoiseScale, scale);
     gl.uniform1f(this.unifNoisePersistence, persistence);
+  }
+
+  setJitter(displacement: number, frequency: number) {
+    this.use();
+    gl.uniform1f(this.unifDisplacement, displacement);
+    gl.uniform1f(this.unifFrequency, frequency);
   }
 
   draw(d: Drawable) {

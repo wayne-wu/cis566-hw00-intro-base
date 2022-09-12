@@ -11,6 +11,7 @@
 // position, light position, and vertex color.
 precision highp float;
 
+uniform float u_Time;
 uniform vec4 u_Color; // The color with which to render this instance of geometry.
 uniform float u_NoiseScale;
 uniform float u_NoisePersistence;
@@ -31,6 +32,15 @@ float hash(vec3 p)  // replace this by something better
     p  = fract( p*0.3183099+.1 );
 	p *= 17.0;
     return fract( p.x*p.y*p.z*(p.x+p.y+p.z) );
+}
+
+vec3 hash3( vec3 p ) // replace this by something better
+{
+	p = vec3( dot(p,vec3(127.1,311.7, 74.7)),
+			  dot(p,vec3(269.5,183.3,246.1)),
+			  dot(p,vec3(113.5,271.9,124.6)));
+
+	return -1.0 + 2.0*fract(sin(p)*43758.5453123);
 }
 
 float noise( in vec3 x )
@@ -67,18 +77,17 @@ float fbm(in vec3 pos)
     return total/amplitudeSum;
 }
 
-
 void main() 
 {
     // Material base color (before shading)
     vec4 diffuseColor = u_Color;
     diffuseColor.xyz *= fbm(fs_Pos.xyz);
 
-    // float n = fbm(fs_Pos.xyz);
-    // float color = 0.5f;
-    // color += smoothstep(.15,.2,n); // Black splatter
-    // color -= smoothstep(.35,.4,n); // Holes on splatter
-    // diffuseColor.xyz *= color;
+    float n = noise(fs_Pos.xyz + 0.01*vec3(100.0*sin(0.01*u_Time)));
+    float color = 0.5f;
+    color += smoothstep(.15,.2,n); // Black splatter
+    color -= smoothstep(.35,.4,n); // Holes on splatter
+    diffuseColor.xyz *= color;
 
     // Calculate the diffuse term for Lambert shading
     float diffuseTerm = dot(normalize(fs_Nor), normalize(fs_LightVec));

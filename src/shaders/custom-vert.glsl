@@ -8,6 +8,8 @@
 //geometry with millions of vertices.
 
 uniform float u_Time;
+uniform float u_Displacement;
+uniform float u_Frequency;
 
 uniform mat4 u_Model;       // The matrix that defines the transformation of the
                             // object we're rendering. In this assignment,
@@ -38,10 +40,10 @@ const vec4 lightPos = vec4(5, 5, 3, 1); //The position of our virtual light, whi
 
 float hash(vec3 p)  // replace this by something better
 {
-    p  = fract( p*0.3183099+.1 );
-	p *= 17.0;
-    return fract( p.x*p.y*p.z*(p.x+p.y+p.z) );
+    p  = 50.0*fract( p*0.3183099 + vec3(0.71,0.113,0.419));
+    return -1.0+2.0*fract( p.x*p.y*p.z*(p.x+p.y+p.z) );
 }
+
 
 void main()
 {
@@ -58,7 +60,7 @@ void main()
     vec3 jitterDir = normalize(vs_Pos.xyz - vec3(0.0));
 
     vec4 jitteredPos = vs_Pos;
-    jitteredPos.xyz += 0.1 * sin(0.1*offset*u_Time) * jitterDir;
+    jitteredPos.xyz += u_Displacement * sin(u_Frequency*offset*u_Time) * jitterDir;
 
     fs_Pos = vs_Pos;
 
