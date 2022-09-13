@@ -15,7 +15,7 @@ const controls = {
   tesselations: 5,
   color: [ 0, 128, 255],
   scale: 1.5,
-  persistence: 0.5,
+  persistence: 0.75,
   displacement: 0.1,
   frequency: 0.1,
   'Load Scene': loadScene, // A function pointer, essentially

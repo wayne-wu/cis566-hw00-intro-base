@@ -37,13 +37,12 @@ out vec4 fs_Pos;
 const vec4 lightPos = vec4(5, 5, 3, 1); //The position of our virtual light, which is used to compute the shading of
                                         //the geometry in the fragment shader.
 
-
-float hash(vec3 p)  // replace this by something better
+// Hash functions are taken from IQ's shadertoy examples
+float hash(vec3 p)
 {
     p  = 50.0*fract( p*0.3183099 + vec3(0.71,0.113,0.419));
     return -1.0+2.0*fract( p.x*p.y*p.z*(p.x+p.y+p.z) );
 }
-
 
 void main()
 {
